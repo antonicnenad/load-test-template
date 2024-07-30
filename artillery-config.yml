@@ -1,0 +1,21 @@
+config:
+  target: "http://dummy-target" # Placeholder URL to satisfy Artillery's requirement
+  phases:
+    - duration: 60
+      arrivalRate: 10
+  processor: "./playwright-script.js"
+  variables:
+    urls:
+      - "https://example.com"
+      - "https://blazedemo.com/index.php"
+      - "https://the-internet.herokuapp.com/"
+
+scenarios:
+  - beforeScenario: |
+      async function(context, ee, next) {
+        const urls = context.vars.urls;
+        context.vars.url = urls[Math.floor(Math.random() * urls.length)];
+        return next();
+      }
+    flow:
+      - function: "runPlaywrightScript"
